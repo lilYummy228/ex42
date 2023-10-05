@@ -11,8 +11,7 @@ namespace ex42
         static void Main(string[] args)
         {
             const string CommandTakeCard = "1";
-            const string CommandShowcard = "2";
-            const string CommandExit = "3";
+            const string CommandExit = "2";
 
             Player player = new Player();
             Deck deck = new Deck();
@@ -21,17 +20,16 @@ namespace ex42
 
             while (isOpen)
             {
-                Console.Write($"{CommandTakeCard} - взять карту\n{CommandShowcard} - показать все карты" +
-                              $"\n{CommandExit} - выйти из программы\nВведите команду: ");
+                Console.WriteLine("Ваша рука");
+                Console.SetCursorPosition(0, 10);
+                player.ShowHand();
+                Console.SetCursorPosition(0, 0);
+                Console.Write($"{CommandTakeCard} - взять карту\n{CommandExit} - выйти из программы\nВведите команду: ");
 
                 switch (Console.ReadLine())
                 {
                     case CommandTakeCard:
                         player.ReceiveCard(deck);
-                        break;
-
-                    case CommandShowcard:
-                        player.ShowHand();
                         break;
 
                     case CommandExit:
@@ -57,7 +55,7 @@ namespace ex42
 
         public void CreateDeck()
         {
-            List<string> cardValues = new List<string> { "T", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "D", "K" };
+            List<string> cardValues = new List<string> { "T", "6", "7", "8", "9", "10", "J", "D", "K" };
             List<string> cardSuits = new List<string> { "♣", "♠", "♥", "♦" };
 
             for (int i = 0; i < cardValues.Count; i++)
@@ -102,7 +100,7 @@ namespace ex42
 
         public void ShowInfo()
         {
-            Console.WriteLine($"|{_value} {_suit}|");
+            Console.Write($"|{_value} {_suit}|");
         }
     }
 
