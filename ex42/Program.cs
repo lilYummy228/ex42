@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ex42
 {
@@ -20,8 +17,8 @@ namespace ex42
 
             while (isOpen)
             {
-                Console.WriteLine("Ваша рука");
                 Console.SetCursorPosition(0, 10);
+                Console.WriteLine("Карты в руке:");
                 player.ShowHand();
                 Console.SetCursorPosition(0, 0);
                 Console.Write($"{CommandTakeCard} - взять карту\n{CommandExit} - выйти из программы\nВведите команду: ");
