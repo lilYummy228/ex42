@@ -10,73 +10,125 @@ namespace ex42
     {
         static void Main(string[] args)
         {
+            const string CommandTakeCard = "1";
+            const string CommandShowcard = "2";
+            const string CommandExit = "3";
+
+            Player player = new Player();
             Deck deck = new Deck();
-            deck.CreateDeck();
+
+            bool isOpen = true;
+
+            while (isOpen)
+            {
+                Console.Write($"{CommandTakeCard} - взять карту\n{CommandShowcard} - показать все карты" +
+                              $"\n{CommandExit} - выйти из программы\nВведите команду: ");
+
+                switch (Console.ReadLine())
+                {
+                    case CommandTakeCard:
+                        player.ReceiveCard(deck);
+                        break;
+
+                    case CommandShowcard:
+                        player.ShowHand();
+                        break;
+
+                    case CommandExit:
+                        isOpen = false;
+                        break;
+                }
+
+                Console.ReadKey();
+                Console.Clear();
+            }
         }
     }
 
     class Deck
     {
-        private int _maxCardValue = 9;
-        private int _maxCardSuits = 4;
+        private List<Card> _cards = new List<Card>();
+
+        public Deck()
+        {
+            CreateDeck();
+            ShuffleDeck();
+        }
 
         public void CreateDeck()
         {
-            List<string> deck = new List<string>();
+            List<string> cardValues = new List<string> { "T", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "D", "K" };
+            List<string> cardSuits = new List<string> { "♣", "♠", "♥", "♦" };
 
-            for (int i = 0; i < _maxCardSuits; i++)
+            for (int i = 0; i < cardValues.Count; i++)
             {
-                for (int j = 0; j < _maxCardValue; j++)
+                for (int j = 0; j < cardSuits.Count; j++)
                 {
-                    deck.Add($"{(CardSuit)i}, {(CardValue)j}");
+                    Card card = new Card(cardValues[i], cardSuits[j]);
+                    _cards.Add(card);
                 }
             }
+        }
 
-            foreach (var card in deck)
+        public void ShuffleDeck()
+        {
+            Random random = new Random();
+
+            for (int i = 0; i < _cards.Count; i++)
             {
-                Console.WriteLine(card);
+                int randomIndex = random.Next(0, _cards.Count);
+                (_cards[i], _cards[randomIndex]) = (_cards[randomIndex], _cards[i]);
             }
+        }
+
+        public Card GiveCard()
+        {
+            Card lastCard = _cards[_cards.Count - 1];
+            _cards.Remove(lastCard);
+            return lastCard;
         }
     }
 
     class Card
     {
-        public List<CardSuit> cardSuits = new List<CardSuit>();
-        public List<CardValue> cardValues = new List<CardValue>();
+        private string _value;
+        private string _suit;
 
-        public Card(CardValue cardValue, CardSuit cardSuit)
+        public Card(string value, string suit)
         {
-            CardValue = cardValue;
-            CardSuit = cardSuit;
+            _value = value;
+            _suit = suit;
         }
 
-        public CardValue CardValue { get; private set; }
-        public CardSuit CardSuit { get; private set; }
-    }
-
-    enum CardSuit
-    {
-        Spades,
-        Hearts,
-        Diamonds,
-        Clubs
-    }
-
-    enum CardValue
-    {
-        Six,
-        Seven,
-        Eight,
-        Nine,
-        Ten,
-        Jack,
-        Quenn,
-        King,
-        Ace
+        public void ShowInfo()
+        {
+            Console.WriteLine($"|{_value} {_suit}|");
+        }
     }
 
     class Player
     {
+        private List<Card> _playerHand = new List<Card>();
 
+        public void ShowHand()
+        {
+            foreach (Card card in _playerHand)
+            {
+                card.ShowInfo();
+            }
+        }
+
+        public void ReceiveCard(Deck deck)
+        {
+            TakeCard(deck.GiveCard());
+        }
+
+        public void TakeCard(Card card)
+        {
+            if (card != null)
+            {
+                _playerHand.Add(card);
+            }
+        }
     }
 }
