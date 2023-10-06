@@ -128,7 +128,7 @@ namespace ex42
 
         public void ShowCountInfo()
         {
-            Console.WriteLine($"Карт в колоде: {_deck.Count}");
+            Console.WriteLine($"Карт в колоде: {_deck.Count} карт");
         }
 
         public void GiveDeck(Player player)
