@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace ex42
 {
@@ -21,6 +20,7 @@ namespace ex42
             while (isOpen)
             {
                 Console.SetCursorPosition(0, 10);
+                deck.ShowCountInfo();
                 Console.WriteLine("Карты в руке:");
                 player.ShowCardsInHand();
                 Console.SetCursorPosition(0, 0);
@@ -61,7 +61,7 @@ namespace ex42
             GiveDeck(player);
         }
 
-        public void CreateDeck()
+        private void CreateDeck()
         {
             List<string> cardSuits = new List<string> { "♠", "♥", "♣", "♦" };
             List<string> cardValues = new List<string> { "6", "7", "8", "9", "10", "J", "Q", "K", "T" };
@@ -76,7 +76,7 @@ namespace ex42
             }
         }
 
-        public void ShuffleDeck()
+        private void ShuffleDeck()
         {
             Random random = new Random();
 
@@ -126,6 +126,11 @@ namespace ex42
             }
         }
 
+        public void ShowCountInfo()
+        {
+            Console.WriteLine($"Карт в колоде: {_deck.Count}");
+        }
+
         public void GiveDeck(Player player)
         {
             _deck.Clear();
@@ -169,8 +174,6 @@ namespace ex42
         {
             _cardsInHand.Clear();
         }
-
-
     }
 
     class Card
