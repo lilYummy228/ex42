@@ -194,5 +194,4 @@ namespace ex42
             Console.Write($"|{_value}{_suit}|");
         }
     }
-
 }
