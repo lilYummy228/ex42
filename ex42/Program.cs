@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Permissions;
 
 namespace ex42
 {
@@ -13,9 +14,10 @@ namespace ex42
             const string CommandExit = "4";
 
             Player player = new Player();
-            Deck deck = new Deck(player);
-
+            Deck deck = new Deck();
             bool isOpen = true;
+
+            deck.Create();
 
             while (isOpen)
             {
@@ -30,7 +32,7 @@ namespace ex42
                 switch (Console.ReadLine())
                 {
                     case CommandTakeCard:
-                        player.TakeCard(deck);
+                        deck.TakeCard(player);
                         break;
 
                     case CommandDropCards:
@@ -38,7 +40,7 @@ namespace ex42
                         break;
 
                     case CommandReCreateDeck:
-                        deck.GiveDeck(player);
+                        player.Recreate(deck);
                         break;
 
                     case CommandExit:
@@ -54,45 +56,24 @@ namespace ex42
 
     class Deck
     {
-        private List<Card> _deck = new List<Card>();
+        private List<Card> _cards = new List<Card>();
 
-        public Deck(Player player)
+        public void TakeCard(Player player)
         {
-            GiveDeck(player);
-        }
+            int count = GiveEnteredAmount();
 
-        private void CreateDeck()
-        {
-            List<string> cardSuits = new List<string> { "♠", "♥", "♣", "♦" };
-            List<string> cardValues = new List<string> { "6", "7", "8", "9", "10", "J", "Q", "K", "T" };
-
-            for (int i = 0; i < cardSuits.Count; i++)
+            for (int i = 0; i < count; i++)
             {
-                for (int j = 0; j < cardValues.Count; j++)
-                {
-                    Card card = new Card(cardSuits[i], cardValues[j]);
-                    _deck.Add(card);
-                }
-            }
-        }
-
-        private void ShuffleDeck()
-        {
-            Random random = new Random();
-
-            for (int i = 0; i < _deck.Count; i++)
-            {
-                int randomIndex = random.Next(i, _deck.Count);
-                (_deck[i], _deck[randomIndex]) = (_deck[randomIndex], _deck[i]);
+                player.PutCardInHand(GiveCard());
             }
         }
 
         public Card GiveCard()
         {
-            if (_deck.Count > 0)
+            if (_cards.Count > 0)
             {
-                Card lastCard = _deck[_deck.Count - 1];
-                _deck.Remove(lastCard);
+                Card lastCard = _cards[_cards.Count - 1];
+                _cards.Remove(lastCard);
                 return lastCard;
             }
             else
@@ -102,14 +83,14 @@ namespace ex42
             }
         }
 
-        public int GiveNeedCardCount()
+        public int GiveEnteredAmount()
         {
             Console.Write("Введите сколько карт вы хотите взять? ");
             string cardCount = Console.ReadLine();
 
             if (int.TryParse(cardCount, out int count))
             {
-                if (count <= _deck.Count)
+                if (count <= _cards.Count)
                 {
                     return count;
                 }
@@ -128,15 +109,38 @@ namespace ex42
 
         public void ShowCountInfo()
         {
-            Console.WriteLine($"Карт в колоде: {_deck.Count} карт");
+            Console.WriteLine($"Карт в колоде: {_cards.Count} карт");
         }
 
-        public void GiveDeck(Player player)
+        public void Shuffle()
         {
-            _deck.Clear();
-            player.DropCards();
-            CreateDeck();
-            ShuffleDeck();
+            Random random = new Random();
+
+            for (int i = 0; i < _cards.Count; i++)
+            {
+                int randomIndex = random.Next(_cards.Count);
+                (_cards[i], _cards[randomIndex]) = (_cards[randomIndex], _cards[i]);
+            }
+        }
+
+        public void Create()
+        {
+            List<string> cardSuits = new List<string> { "♠", "♥", "♣", "♦" };
+            List<string> cardValues = new List<string> { "6", "7", "8", "9", "10", "J", "Q", "K", "T" };
+
+            for (int i = 0; i < cardSuits.Count; i++)
+            {
+                for (int j = 0; j < cardValues.Count; j++)
+                {
+                    Card card = new Card(cardSuits[i], cardValues[j]);
+                    _cards.Add(card);
+                }
+            }
+        }
+
+        public void Clear()
+        {
+            _cards.Clear();
         }
     }
 
@@ -152,44 +156,43 @@ namespace ex42
             }
         }
 
-        public void TakeCard(Deck deck)
+        public void Recreate(Deck deck)
         {
-            int count = deck.GiveNeedCardCount();
-
-            for (int i = 0; i < count; i++)
-            {
-                PutCardInHand(deck.GiveCard());
-            }
-        }
-
-        private void PutCardInHand(Card card)
-        {
-            if (card != null)
-            {
-                _cardsInHand.Add(card);
-            }
+            DropCards();
+            deck.Clear();
+            deck.Create();
+            deck.Shuffle();
         }
 
         public void DropCards()
         {
             _cardsInHand.Clear();
         }
+
+        public void PutCardInHand(Card card)
+        {
+            if (card != null)
+            {
+                _cardsInHand.Add(card);
+            }
+        }
     }
 
     class Card
     {
-        private string _cardSuit;
-        private string _cardValue;
+        private string _suit;
+        private string _value;
 
-        public Card(string cardSuit, string cardValue)
+        public Card(string suit, string value)
         {
-            _cardSuit = cardSuit;
-            _cardValue = cardValue;
+            _suit = suit;
+            _value = value;
         }
 
         public void ShowInfo()
         {
-            Console.Write($"|{_cardValue}{_cardSuit}|");
+            Console.Write($"|{_value}{_suit}|");
         }
     }
+
 }
