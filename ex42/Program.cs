@@ -38,7 +38,7 @@ namespace ex42
                         break;
 
                     case CommandReCreateDeck:
-                        player.Recreate(deck);
+                        player.RecreateDeck(deck);
                         break;
 
                     case CommandExit:
@@ -160,7 +160,7 @@ namespace ex42
             }
         }
 
-        public void Recreate(Deck deck)
+        public void RecreateDeck(Deck deck)
         {
             DropCards();
             deck.Clear();
