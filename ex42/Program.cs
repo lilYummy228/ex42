@@ -14,14 +14,13 @@ namespace ex42
 
             Player player = new Player();
             Deck deck = new Deck();
-            bool isOpen = true;
 
-            deck.Create();
+            bool isOpen = true;
 
             while (isOpen)
             {
                 Console.SetCursorPosition(0, 10);
-                deck.ShowCountInfo();
+                deck.ShowCardsCountInfo();
                 Console.WriteLine("Карты в руке:");
                 player.ShowCardsInHand();
                 Console.SetCursorPosition(0, 0);
@@ -57,17 +56,23 @@ namespace ex42
     {
         private List<Card> _cards = new List<Card>();
 
+        public Deck()
+        {
+            Create();
+            Shuffle();
+        }
+
         public void TakeCard(Player player)
         {
-            int count = GiveEnteredAmount();
+            int count = GiveEnteredCardAmount();
 
             for (int i = 0; i < count; i++)
             {
-                player.PutCardInHand(GiveCard());
+                player.PutCardInHand(GetCard());
             }
         }
 
-        public Card GiveCard()
+        public Card GetCard()
         {
             if (_cards.Count > 0)
             {
@@ -82,7 +87,7 @@ namespace ex42
             }
         }
 
-        public int GiveEnteredAmount()
+        public int GiveEnteredCardAmount()
         {
             Console.Write("Введите сколько карт вы хотите взять? ");
             string cardCount = Console.ReadLine();
@@ -106,7 +111,7 @@ namespace ex42
             }
         }
 
-        public void ShowCountInfo()
+        public void ShowCardsCountInfo()
         {
             Console.WriteLine($"Карт в колоде: {_cards.Count} карт");
         }
