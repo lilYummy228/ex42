@@ -51,7 +51,7 @@ namespace ex42
             Shuffle();
         }
 
-        public Card GetCardFromTop()
+        public Card GiveCardsFromTop()
         {
             while (_cards.Count > 0)
             {
@@ -102,19 +102,15 @@ namespace ex42
         public void ShowCardsInHand()
         {
             foreach (Card card in _cardsInHand)
-            {
-                card.ShowInfo();
-            }
+                card.ShowInfo();            
         }
 
         public void ReceiveCards(Deck deck)
         {
             int count = GiveRightCardAmount();
 
-            for (int i = 0; i < count; i++)
-            {
-                PutCardInHand(deck.GetCardFromTop());
-            }
+            for (int i = 0; i < count; i++)            
+                PutCardInHand(deck.GiveCardsFromTop());            
         }
 
         private int GiveRightCardAmount()
@@ -129,10 +125,8 @@ namespace ex42
 
         private void PutCardInHand(Card card)
         {
-            if (card != null)
-            {
-                _cardsInHand.Add(card);
-            }
+            if (card != null)           
+                _cardsInHand.Add(card);           
         }
     }
 
