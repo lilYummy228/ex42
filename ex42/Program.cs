@@ -8,9 +8,7 @@ namespace ex42
         static void Main(string[] args)
         {
             const string CommandTakeCard = "1";
-            const string CommandDropCards = "2";
-            const string CommandReCreateDeck = "3";
-            const string CommandExit = "4";
+            const string CommandExit = "2";
 
             Player player = new Player();
             Deck deck = new Deck();
@@ -24,21 +22,12 @@ namespace ex42
                 Console.WriteLine("Карты в руке:");
                 player.ShowCardsInHand();
                 Console.SetCursorPosition(0, 0);
-                Console.Write($"{CommandTakeCard} - Взять карты\n{CommandDropCards} - Сбросить карты в отбой\n" +
-                    $"{CommandReCreateDeck} - Пересоздать колоду\n{CommandExit} - Выход\nВыберете операцию: ");
+                Console.Write($"{CommandTakeCard} - Взять карты\n{CommandExit} - Выход\nВыберете операцию: ");
 
                 switch (Console.ReadLine())
                 {
                     case CommandTakeCard:
-                        deck.TakeCard(player);
-                        break;
-
-                    case CommandDropCards:
-                        player.DropCards();
-                        break;
-
-                    case CommandReCreateDeck:
-                        player.RecreateDeck(deck);
+                        player.ReceiveCards(deck);
                         break;
 
                     case CommandExit:
@@ -62,53 +51,16 @@ namespace ex42
             Shuffle();
         }
 
-        public void TakeCard(Player player)
+        public Card GetCardFromTop()
         {
-            int count = GiveEnteredCardAmount();
-
-            for (int i = 0; i < count; i++)
-            {
-                player.PutCardInHand(GetCard());
-            }
-        }
-
-        public Card GetCard()
-        {
-            if (_cards.Count > 0)
+            while (_cards.Count > 0)
             {
                 Card lastCard = _cards[_cards.Count - 1];
                 _cards.Remove(lastCard);
                 return lastCard;
             }
-            else
-            {
-                Console.WriteLine("Карты в колоде закончились...");
-                return null;
-            }
-        }
 
-        public int GiveEnteredCardAmount()
-        {
-            Console.Write("Введите сколько карт вы хотите взять? ");
-            string cardCount = Console.ReadLine();
-
-            if (int.TryParse(cardCount, out int count))
-            {
-                if (count <= _cards.Count)
-                {
-                    return count;
-                }
-                else
-                {
-                    Console.WriteLine("В колоде недостаточно карт...");
-                    return 0;
-                }
-            }
-            else
-            {
-                Console.WriteLine("Неверный ввод...");
-                return 0;
-            }
+            return null;
         }
 
         public void ShowCardsCountInfo()
@@ -116,7 +68,7 @@ namespace ex42
             Console.WriteLine($"Карт в колоде: {_cards.Count} карт");
         }
 
-        public void Shuffle()
+        private void Shuffle()
         {
             Random random = new Random();
 
@@ -127,7 +79,7 @@ namespace ex42
             }
         }
 
-        public void Create()
+        private void Create()
         {
             List<string> cardSuits = new List<string> { "♠", "♥", "♣", "♦" };
             List<string> cardValues = new List<string> { "6", "7", "8", "9", "10", "J", "Q", "K", "T" };
@@ -140,11 +92,6 @@ namespace ex42
                     _cards.Add(card);
                 }
             }
-        }
-
-        public void Clear()
-        {
-            _cards.Clear();
         }
     }
 
@@ -160,20 +107,27 @@ namespace ex42
             }
         }
 
-        public void RecreateDeck(Deck deck)
+        public void ReceiveCards(Deck deck)
         {
-            DropCards();
-            deck.Clear();
-            deck.Create();
-            deck.Shuffle();
+            int count = GiveRightCardAmount();
+
+            for (int i = 0; i < count; i++)
+            {
+                PutCardInHand(deck.GetCardFromTop());
+            }
         }
 
-        public void DropCards()
+        private int GiveRightCardAmount()
         {
-            _cardsInHand.Clear();
+            Console.Write("Введите сколько карт вы хотите взять? ");
+
+            if (int.TryParse(Console.ReadLine(), out int cardCount) == false)
+                Console.WriteLine("Неверный ввод...");
+
+            return cardCount;
         }
 
-        public void PutCardInHand(Card card)
+        private void PutCardInHand(Card card)
         {
             if (card != null)
             {
