@@ -17,7 +17,7 @@ namespace ex42
 
             while (isOpen)
             {
-                Console.SetCursorPosition(0, 10);
+                Console.SetCursorPosition(0, 7);
                 deck.ShowCardsCountInfo();
                 Console.WriteLine("Карты в руке:");
                 player.ShowCardsInHand();
@@ -85,13 +85,11 @@ namespace ex42
             List<string> cardValues = new List<string> { "6", "7", "8", "9", "10", "J", "Q", "K", "T" };
 
             for (int i = 0; i < cardSuits.Count; i++)
-            {
                 for (int j = 0; j < cardValues.Count; j++)
                 {
                     Card card = new Card(cardSuits[i], cardValues[j]);
                     _cards.Add(card);
                 }
-            }
         }
     }
 
@@ -102,15 +100,15 @@ namespace ex42
         public void ShowCardsInHand()
         {
             foreach (Card card in _cardsInHand)
-                card.ShowInfo();            
+                card.ShowInfo();
         }
 
         public void ReceiveCards(Deck deck)
         {
             int count = GiveRightCardAmount();
 
-            for (int i = 0; i < count; i++)            
-                PutCardInHand(deck.GiveCardsFromTop());            
+            for (int i = 0; i < count; i++)
+                PutCardInHand(deck.GiveCardsFromTop());
         }
 
         private int GiveRightCardAmount()
@@ -125,8 +123,8 @@ namespace ex42
 
         private void PutCardInHand(Card card)
         {
-            if (card != null)           
-                _cardsInHand.Add(card);           
+            if (card != null)
+                _cardsInHand.Add(card);
         }
     }
 
