@@ -22,12 +22,12 @@ namespace ex42
                 Console.WriteLine("Карты в руке:");
                 player.ShowCardsInHand();
                 Console.SetCursorPosition(0, 0);
-                Console.Write($"{CommandTakeCard} - Взять карты\n{CommandExit} - Выход\nВыберете операцию: ");
+                Console.Write($"{CommandTakeCard} - Взять карты\n{CommandExit} - Выход\n\nВыберете операцию: ");
 
                 switch (Console.ReadLine())
                 {
                     case CommandTakeCard:
-                        player.ReceiveCards(deck);
+                        deck.GiveCardsToPlayer(player);
                         break;
 
                     case CommandExit:
@@ -53,19 +53,42 @@ namespace ex42
 
         public Card GiveCardsFromTop()
         {
-            while (_cards.Count > 0)
+            if (_cards.Count > 0)
             {
                 Card lastCard = _cards[_cards.Count - 1];
                 _cards.Remove(lastCard);
                 return lastCard;
             }
+            else
+            {
+                return null;
+            }
+        }
 
-            return null;
+        public void GiveCardsToPlayer(Player player)
+        {
+            int count = GiveRightCardAmount();
+
+            while (count > 0)
+            {
+                player.PutCardsInHand(GiveCardsFromTop());
+                count--;
+            }
         }
 
         public void ShowCardsCountInfo()
         {
             Console.WriteLine($"Карт в колоде: {_cards.Count} карт");
+        }
+
+        private int GiveRightCardAmount()
+        {
+            Console.Write("Введите сколько карт вы хотите взять? ");
+
+            if (int.TryParse(Console.ReadLine(), out int cardCount) == false)
+                Console.WriteLine("Неверный ввод...");
+
+            return cardCount;
         }
 
         private void Shuffle()
@@ -85,11 +108,13 @@ namespace ex42
             List<string> cardValues = new List<string> { "6", "7", "8", "9", "10", "J", "Q", "K", "T" };
 
             for (int i = 0; i < cardSuits.Count; i++)
+            {
                 for (int j = 0; j < cardValues.Count; j++)
                 {
                     Card card = new Card(cardSuits[i], cardValues[j]);
                     _cards.Add(card);
                 }
+            }
         }
     }
 
@@ -103,28 +128,12 @@ namespace ex42
                 card.ShowInfo();
         }
 
-        public void ReceiveCards(Deck deck)
-        {
-            int count = GiveRightCardAmount();
-
-            for (int i = 0; i < count; i++)
-                PutCardInHand(deck.GiveCardsFromTop());
-        }
-
-        private int GiveRightCardAmount()
-        {
-            Console.Write("Введите сколько карт вы хотите взять? ");
-
-            if (int.TryParse(Console.ReadLine(), out int cardCount) == false)
-                Console.WriteLine("Неверный ввод...");
-
-            return cardCount;
-        }
-
-        private void PutCardInHand(Card card)
+        public void PutCardsInHand(Card card)
         {
             if (card != null)
+            {
                 _cardsInHand.Add(card);
+            }
         }
     }
 
