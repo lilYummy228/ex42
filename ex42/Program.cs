@@ -27,7 +27,13 @@ namespace ex42
                 switch (Console.ReadLine())
                 {
                     case CommandTakeCard:
-                        deck.GiveCardsToPlayer(player);
+                        int pickCount = deck.GiveRightCardAmount();
+
+                        for (int i = 0; i < pickCount; i++)
+                        {
+                            player.PutCardsInHand(deck.GiveCardsFromTop());
+                        }
+
                         break;
 
                     case CommandExit:
@@ -65,23 +71,12 @@ namespace ex42
             }
         }
 
-        public void GiveCardsToPlayer(Player player)
-        {
-            int count = GiveRightCardAmount();
-
-            while (count > 0)
-            {
-                player.PutCardsInHand(GiveCardsFromTop());
-                count--;
-            }
-        }
-
-        public void ShowCardsCountInfo()
+        private void ShowCardsCountInfo()
         {
             Console.WriteLine($"Карт в колоде: {_cards.Count} карт");
         }
 
-        private int GiveRightCardAmount()
+        public int GiveRightCardAmount()
         {
             Console.Write("Введите сколько карт вы хотите взять? ");
 
