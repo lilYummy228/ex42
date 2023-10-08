@@ -29,10 +29,8 @@ namespace ex42
                     case CommandTakeCard:
                         int pickCount = deck.GiveRightCardAmount();
 
-                        for (int i = 0; i < pickCount; i++)
-                        {
-                            player.PutCardsInHand(deck.GiveCardsFromTop());
-                        }
+                        for (int i = 0; i < pickCount; i++)                        
+                            player.PutCardsInHand(deck.GiveCardsFromTop());                        
 
                         break;
 
@@ -71,7 +69,7 @@ namespace ex42
             }
         }
 
-        private void ShowCardsCountInfo()
+        public void ShowCardsCountInfo()
         {
             Console.WriteLine($"Карт в колоде: {_cards.Count} карт");
         }
