@@ -12,6 +12,7 @@ namespace ex42
 
             Player player = new Player();
             Deck deck = new Deck();
+            Croupier сroupier = new Croupier();
 
             bool isOpen = true;
 
@@ -27,11 +28,7 @@ namespace ex42
                 switch (Console.ReadLine())
                 {
                     case CommandTakeCard:
-                        int pickCount = deck.GiveRightCardAmount();
-
-                        for (int i = 0; i < pickCount; i++)                        
-                            player.PutCardsInHand(deck.GiveCardsFromTop());                        
-
+                        сroupier.GiveCards(deck, player);
                         break;
 
                     case CommandExit:
@@ -144,6 +141,17 @@ namespace ex42
         public void ShowInfo()
         {
             Console.Write($"|{_value}{_suit}|");
+        }
+    }
+
+    class Croupier
+    {
+        public void GiveCards(Deck deck, Player player)
+        {
+            int pickCount = deck.GiveRightCardAmount();
+
+            for (int i = 0; i < pickCount; i++)
+                player.PutCardsInHand(deck.GiveCardsFromTop());
         }
     }
 }
